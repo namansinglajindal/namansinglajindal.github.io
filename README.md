@@ -1,6 +1,6 @@
 # LexScan AI + ClauseForge
 ### Cross-Jurisdictional Compliance Intelligence & Legal Clause Architect
-*Built by Naman Singla · BSc LLB (Hons) Cybersecurity · NLIU*
+*Built by Naman Singla (with aid of AI Tools) · BSc LLB (Hons) Cybersecurity · NLIU*
 
 ---
 
