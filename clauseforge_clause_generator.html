@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClauseForge – Legal Clause Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:     #f7f2ea;
+    --paper:     #fffdf8;
+    --paper-2:   #f2ede3;
+    --border:    #d9cdb8;
+    --border-2:  #c5b89a;
+    --ink:       #1c1917;
+    --ink-mid:   #44403c;
+    --ink-light: #78716c;
+    --ink-dim:   #a8a29e;
+    --crimson:   #9b1c1c;
+    --crimson-2: #7f1d1d;
+    --crimson-bg:#fef2f2;
+    --gold:      #b45309;
+    --gold-bg:   #fffbeb;
+    --navy:      #1e3a5f;
+    --navy-bg:   #eff6ff;
+    --green:     #166534;
+    --green-bg:  #f0fdf4;
+    --serif:  'Cormorant Garamond', Georgia, serif;
+    --sans:   'DM Sans', sans-serif;
+    --mono:   'Space Mono', monospace;
+    --radius: 4px;
+    --shadow: 0 2px 12px rgba(28,25,23,.08);
+    --shadow-lg: 0 8px 32px rgba(28,25,23,.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.65;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .brand { display: flex; flex-direction: column; }
+  .brand-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #f5efe6;
+  }
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #a8a29e;
+    text-transform: uppercase;
+    margin-top: -2px;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #a8a29e;
+    border: 1px solid #44403c;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── LAYOUT ── */
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 36px 24px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .form-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--crimson);
+    letter-spacing: .5px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  select, textarea, input[type=text], input[type=password] {
+    width: 100%;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 9px 12px;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+    appearance: none;
+  }
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%2378716c' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+    background-color: var(--paper);
+  }
+  select:focus, textarea:focus, input:focus {
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(155,28,28,.08);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  .key-row { position: relative; }
+  .key-row input { padding-right: 50px; }
+  .show-key {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    font-family: var(--mono); font-size: 10px; color: var(--ink-light);
+    letter-spacing: .5px; padding: 3px;
+  }
+  .show-key:hover { color: var(--crimson); }
+
+  .api-note {
+    font-size: 11px; color: var(--ink-light); line-height: 1.55;
+    background: var(--gold-bg);
+    border-left: 3px solid var(--gold);
+    padding: 8px 10px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .api-note a { color: var(--gold); }
+
+  /* Clause type pills */
+  .clause-pills {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pill {
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: .3px;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--ink-mid);
+    background: var(--paper-2);
+    transition: all .18s;
+    user-select: none;
+  }
+  .pill:hover { border-color: var(--crimson); color: var(--crimson); }
+  .pill.active { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  /* Context fields grid */
+  .context-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .btn-forge {
+    width: 100%;
+    padding: 13px;
+    background: var(--crimson);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    font-style: italic;
+  }
+  .btn-forge:hover { background: var(--crimson-2); }
+  .btn-forge:active { transform: scale(.99); }
+  .btn-forge:disabled { background: var(--border-2); cursor: not-allowed; }
+
+  .form-footer {
+    font-size: 10px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+  /* ── OUTPUT AREA ── */
+  .output-area { display: flex; flex-direction: column; gap: 20px; }
+
+  .output-empty {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 60px 40px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    color: var(--ink-dim);
+  }
+  .output-empty .glyph { font-family: var(--serif); font-size: 72px; line-height: 1; opacity: .25; }
+  .output-empty h2 { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink-light); }
+  .output-empty p { font-size: 13px; max-width: 320px; line-height: 1.7; }
+
+  /* Loader */
+  .output-loader {
+    display: none; flex-direction: column; gap: 12px;
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+    align-items: center; justify-content: center; min-height: 240px;
+  }
+  .output-loader.on { display: flex; }
+  .quill {
+    font-size: 36px;
+    animation: write 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes write {
+    from { transform: rotate(-10deg) translateX(-4px); }
+    to   { transform: rotate(10deg) translateX(4px); }
+  }
+  .loader-msg {
+    font-family: var(--serif); font-size: 18px; font-style: italic; color: var(--ink-light);
+    animation: fade 1.5s ease-in-out infinite;
+  }
+  @keyframes fade { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+
+  /* Document output */
+  .document-card {
+    display: none;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .document-card.on { display: block; }
+
+  .doc-toolbar {
+    padding: 14px 20px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .doc-meta { display: flex; flex-direction: column; gap: 2px; }
+  .doc-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--ink-dim); text-transform: uppercase; }
+  .doc-clause-type { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); }
+  .doc-actions { display: flex; gap: 8px; }
+  .btn-doc {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--paper);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    color: var(--ink-mid);
+    transition: all .18s;
+  }
+  .btn-doc:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  .doc-body {
+    padding: 32px 40px;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  /* Section headings in output */
+  .doc-body .sec-head {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin: 28px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .doc-body .sec-head:first-child { margin-top: 0; }
+  .doc-body p { margin-bottom: 10px; }
+  .doc-body ul { margin-left: 22px; margin-bottom: 12px; }
+  .doc-body ul li { margin-bottom: 6px; list-style: disc; }
+  .doc-body ol { margin-left: 22px; margin-bottom: 12px; }
+  .doc-body ol li { margin-bottom: 6px; }
+  .doc-body strong { color: var(--crimson-2); font-weight: 700; }
+  .doc-body em { color: var(--ink-mid); }
+  .doc-body code {
+    font-family: var(--mono); font-size: 12px;
+    background: var(--paper-2); padding: 2px 6px; border-radius: 3px; color: var(--gold);
+  }
+
+  /* The Clause box */
+  .clause-box {
+    background: var(--cream);
+    border: 1px solid var(--border-2);
+    border-left: 4px solid var(--crimson);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 20px 24px;
+    margin: 12px 0 20px;
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  /* Error */
+  .err-banner {
+    background: #fef2f2; border: 1px solid #fca5a5;
+    border-radius: var(--radius); padding: 12px 16px;
+    font-size: 13px; color: var(--crimson); display: none;
+  }
+  .err-banner.on { display: block; }
+
+  @media (max-width: 800px) {
+    .wrap { grid-template-columns: 1fr; padding: 20px 14px; }
+    .doc-body { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-name">ClauseForge</div>
+    <div class="brand-sub">Legal Clause Architect · India-focused</div>
+  </div>
+  <div class="header-right">
+    <div class="header-badge">FREE · GEMINI API</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ─── FORM ─── -->
+  <div class="form-card">
+    <div class="form-title">Draft a Legal Clause</div>
+
+    <!-- API Key -->
+    <div class="field">
+      <label>Gemini API Key (Free)</label>
+      <div class="key-row">
+        <input type="password" id="apiKey" placeholder="Paste key from aistudio.google.com…">
+        <button class="show-key" onclick="toggleKey()">SHOW</button>
+      </div>
+      <div class="api-note">
+        100% free at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>. Sign in with Google → Create API Key. 1,500 req/day free.
+      </div>
+    </div>
+
+    <!-- Clause Type Pills -->
+    <div class="field">
+      <label>Clause Type</label>
+      <div class="clause-pills" id="pillGroup">
+        <span class="pill active" data-value="CIRP Resolution Plan Key Terms (IBC 2016, Section 30)">📋 CIRP Plan</span>
+        <span class="pill" data-value="Contra Proferentem Interpretation Clause (Indian Contract Act 1872)">⚖ Contra Proferentem</span>
+        <span class="pill" data-value="DPDP Act 2023 Data Processing Consent Clause">🔐 DPDP Consent</span>
+        <span class="pill" data-value="Force Majeure Clause (Indian-law governed, post-COVID standards)">🌪 Force Majeure</span>
+        <span class="pill" data-value="Arbitration Clause (UNCITRAL / ICA Rules, seat: India)">🏛 Arbitration</span>
+        <span class="pill" data-value="Indemnification and Limitation of Liability Clause (IT Act / Indian Contract Act)">🛡 Indemnity & Liability</span>
+        <span class="pill" data-value="ESOP / Stock Option Vesting Clause (SEBI, Companies Act 2013)">📈 ESOP Vesting</span>
+        <span class="pill" data-value="Non-Compete and Non-Solicitation Clause (enforceable under Indian law)">🚫 Non-Compete</span>
+        <span class="pill" data-value="Intellectual Property Assignment Clause (Indian Copyright Act, Patents Act)">💡 IP Assignment</span>
+        <span class="pill" data-value="Data Localisation and Cross-Border Transfer Clause (DPDP Act 2023, IT Act)">🌐 Data Localisation</span>
+      </div>
+      <input type="hidden" id="clauseTypeHidden" value="CIRP Resolution Plan Key Terms (IBC 2016, Section 30)">
+    </div>
+
+    <!-- Context -->
+    <div class="field">
+      <label>Parties & Transaction Context</label>
+      <textarea id="context" placeholder="e.g. Resolution Applicant: Tata Steel Ltd · Corporate Debtor: ABC Steels Pvt Ltd (MSME) · Resolution Professional: [Name] · Total admitted claims: ₹450 Cr · Proposed resolution amount: ₹120 Cr"></textarea>
+    </div>
+
+    <!-- Governing Law -->
+    <div class="field">
+      <label>Governing Law Preference</label>
+      <select id="govLaw">
+        <option value="Laws of India (Courts of [City], India)">India (default)</option>
+        <option value="Laws of Maharashtra (Courts of Mumbai, India)">Maharashtra (Mumbai courts)</option>
+        <option value="Laws of Delhi (Courts of New Delhi, India)">Delhi (New Delhi courts)</option>
+        <option value="Laws of Karnataka (Courts of Bengaluru, India)">Karnataka (Bengaluru courts)</option>
+        <option value="Laws of Singapore (SIAC)">Singapore (SIAC)</option>
+        <option value="Laws of England & Wales">England & Wales</option>
+      </select>
+    </div>
+
+    <!-- Tone -->
+    <div class="field">
+      <label>Drafting Formality</label>
+      <select id="tone">
+        <option value="highly formal, suitable for High Court or NCLT proceedings">High Court / NCLT formal</option>
+        <option value="formal but plain-language, suitable for commercial contracts">Commercial contract</option>
+        <option value="startup-friendly, plain English with legal precision">Startup / plain English</option>
+      </select>
+    </div>
+
+    <!-- Include annotations toggle -->
+    <div class="field">
+      <label>Output Depth</label>
+      <select id="depth">
+        <option value="full">Full — Clause + Citations + Explanation + Pitfalls</option>
+        <option value="clause-only">Clause Only — Ready to paste into contract</option>
+        <option value="annotated">Annotated — Clause with inline explanations</option>
+      </select>
+    </div>
+
+    <button class="btn-forge" id="forgeBtn" onclick="forge()">Forge this Clause →</button>
+
+    <div class="form-footer">
+      ClauseForge · Powered by Gemini 1.5 Flash (Free) · Not legal advice.<br>
+      Always review output with a qualified advocate before use.
+    </div>
+  </div>
+
+  <!-- ─── OUTPUT ─── -->
+  <div class="output-area">
+
+    <div class="err-banner" id="errBanner"></div>
+
+    <!-- Empty -->
+    <div class="output-empty" id="emptyState">
+      <div class="glyph">§</div>
+      <h2>Your clause will appear here</h2>
+      <p>Select a clause type, add context about the parties and transaction, then click Forge. Results include the drafted clause, legal citations, plain-language notes, and common pitfalls.</p>
+    </div>
+
+    <!-- Loader -->
+    <div class="output-loader" id="loaderEl">
+      <div class="quill">✍️</div>
+      <div class="loader-msg" id="loaderMsg">Drafting your clause…</div>
+    </div>
+
+    <!-- Document -->
+    <div class="document-card" id="docCard">
+      <div class="doc-toolbar">
+        <div class="doc-meta">
+          <div class="doc-label">Generated Clause</div>
+          <div class="doc-clause-type" id="docTitle">—</div>
+        </div>
+        <div class="doc-actions">
+          <button class="btn-doc" onclick="copyClause()">Copy</button>
+          <button class="btn-doc" onclick="downloadClause()">Download .txt</button>
+        </div>
+      </div>
+      <div class="doc-body" id="docBody"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let rawClause = '';
+
+  // Pill selection
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      document.getElementById('clauseTypeHidden').value = p.dataset.value;
+    });
+  });
+
+  function toggleKey() {
+    const inp = document.getElementById('apiKey');
+    const btn = document.querySelector('.show-key');
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'HIDE'; }
+    else { inp.type = 'password'; btn.textContent = 'SHOW'; }
+  }
+
+  const loaderMsgs = [
+    'Drafting your clause…',
+    'Consulting the statute books…',
+    'Checking NCLT precedents…',
+    'Applying contra proferentem…',
+    'Refining the draft…'
+  ];
+  let loaderTick;
+
+  function setLoading(on) {
+    document.getElementById('loaderEl').classList.toggle('on', on);
+    document.getElementById('emptyState').style.display = on ? 'none' : '';
+    document.getElementById('forgeBtn').disabled = on;
+    if (on) {
+      let i = 0;
+      loaderTick = setInterval(() => {
+        document.getElementById('loaderMsg').textContent = loaderMsgs[i++ % loaderMsgs.length];
+      }, 1200);
+    } else {
+      clearInterval(loaderTick);
+    }
+  }
+
+  function showError(msg) {
+    const b = document.getElementById('errBanner');
+    b.textContent = '⚠ ' + msg;
+    b.classList.add('on');
+    setTimeout(() => b.classList.remove('on'), 8000);
+  }
+
+  async function forge() {
+    const key = document.getElementById('apiKey').value.trim();
+    const clauseType = document.getElementById('clauseTypeHidden').value;
+    const context = document.getElementById('context').value.trim();
+    const govLaw = document.getElementById('govLaw').value;
+    const tone = document.getElementById('tone').value;
+    const depth = document.getElementById('depth').value;
+
+    if (!key) { showError('Gemini API key required. Get one free at aistudio.google.com.'); return; }
+
+    const depthInstructions = {
+      'full': `Provide ALL of the following sections:
+## THE CLAUSE
+## LEGAL CITATIONS
+## PLAIN LANGUAGE EXPLANATION
+## DRAFTING NOTES (what to customise)
+## COMMON PITFALLS`,
+      'clause-only': `Provide ONLY the clause itself under ## THE CLAUSE. No explanations, no citations. Just the ready-to-use legal text.`,
+      'annotated': `Provide the clause under ## THE CLAUSE, with square-bracket annotations [Explanation: …] after each key phrase explaining its legal significance. Then add a brief ## DRAFTING NOTES section.`
+    };
+
+    const prompt = `You are a senior Indian advocate with 20 years of experience in corporate, commercial, and insolvency law. You specialise in drafting precise, enforceable contract clauses for Indian courts.
+
+TASK: Draft a legal clause of type: ${clauseType}
+
+CONTEXT PROVIDED BY USER:
+${context || '(No specific context — draft a general-purpose version)'}
+
+GOVERNING LAW: ${govLaw}
+DRAFTING STYLE: ${tone}
+
+${depthInstructions[depth]}
+
+---
+RULES FOR DRAFTING:
+1. The clause text itself must be in proper legal language — no informal phrasing.
+2. All statutory references must be accurate: cite the correct Act name, year, and section number.
+3. For CIRP / IBC clauses: reference IBC 2016, IBBI (Insolvency Resolution Process for Corporate Persons) Regulations 2016, and relevant NCLT rules.
+4. For contract clauses: reference the Indian Contract Act 1872, Specific Relief Act 1963, or other relevant statutes.
+5. For data clauses: reference the Digital Personal Data Protection Act 2023 and IT Act 2000.
+6. If a legal point is unsettled or jurisdiction-specific, flag it explicitly: [Verify: …].
+7. NEVER fabricate case citations or section numbers. If uncertain, write "as may be prescribed" or "refer to [Act name] for specific thresholds."
+8. Under COMMON PITFALLS, mention at least one non-obvious issue that even experienced lawyers miss with this clause type.
+9. Use "Party A" / "Party B" or the names from the user's context.
+
+Begin your response directly with the first section header.`;
+
+    setLoading(true);
+    document.getElementById('docCard').classList.remove('on');
+    document.getElementById('errBanner').classList.remove('on');
+    document.getElementById('emptyState').style.display = 'none';
+
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.2, maxOutputTokens: 2500 }
+          })
+        }
+      );
+
+      if (!resp.ok) {
+        const e = await resp.json();
+        throw new Error(e.error?.message || `HTTP ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error('Empty response. Please try again.');
+
+      rawClause = text;
+
+      // Update pill label for title
+      const activeP = document.querySelector('.pill.active');
+      document.getElementById('docTitle').textContent = activeP ? activeP.textContent.trim() : clauseType;
+      document.getElementById('docBody').innerHTML = renderDoc(text);
+      document.getElementById('docCard').classList.add('on');
+
+    } catch (e) {
+      showError(e.message);
+      document.getElementById('emptyState').style.display = '';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderDoc(text) {
+    const lines = text.split('\n');
+    let html = '';
+    let inUL = false, inOL = false;
+    let inClauseBox = false;
+
+    const closeList = () => {
+      if (inUL) { html += '</ul>'; inUL = false; }
+      if (inOL) { html += '</ol>'; inOL = false; }
+    };
+
+    for (let rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) { closeList(); if (inClauseBox) { inClauseBox = false; html += '</div>'; } html += '<br>'; continue; }
+
+      if (line.startsWith('## ')) {
+        closeList();
+        if (inClauseBox) { inClauseBox = false; html += '</div>'; }
+        const title = line.slice(3).trim();
+        html += `<div class="sec-head">${esc(title)}</div>`;
+        // If it's THE CLAUSE section, start clause box
+        if (title === 'THE CLAUSE') { html += '<div class="clause-box">'; inClauseBox = true; }
+      } else if (line.startsWith('### ')) {
+        closeList();
+        html += `<h4 style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--navy);margin:14px 0 6px;">${esc(line.slice(4))}</h4>`;
+      } else if (/^\d+\.\s/.test(line)) {
+        if (!inOL) { html += '<ol>'; inOL = true; }
+        if (inUL) { html += '</ul>'; inUL = false; }
+        html += `<li>${inline(line.replace(/^\d+\.\s/, ''))}</li>`;
+      } else if (line.startsWith('- ') || line.startsWith('• ') || line.startsWith('* ')) {
+        if (!inUL) { html += '<ul>'; inUL = true; }
+        if (inOL) { html += '</ol>'; inOL = false; }
+        html += `<li>${inline(line.slice(2))}</li>`;
+      } else {
+        closeList();
+        html += `<p>${inline(line)}</p>`;
+      }
+    }
+    closeList();
+    if (inClauseBox) html += '</div>';
+    return html;
+  }
+
+  function inline(text) {
+    return esc(text)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\[Verify:\s*(.+?)\]/g, '<span style="background:#fffbeb;color:#b45309;border:1px solid #fcd34d;padding:1px 7px;border-radius:3px;font-family:var(--mono);font-size:11px;">⚠ Verify: $1</span>')
+      .replace(/\[Explanation:\s*(.+?)\]/g, '<span style="background:#eff6ff;color:#1e40af;padding:2px 8px;border-radius:3px;font-size:12px;font-family:var(--sans);font-style:normal;">[Note: $1]</span>');
+  }
+
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function copyClause() {
+    navigator.clipboard.writeText(rawClause).then(() => {
+      const btn = event.target;
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+
+  function downloadClause() {
+    const title = document.querySelector('.pill.active')?.textContent?.trim() || 'clause';
+    const blob = new Blob([rawClause], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ClauseForge_${title.replace(/\W+/g,'_')}_${Date.now()}.txt`;
+    a.click();
+  }
+</script>
+</body>
+</html>

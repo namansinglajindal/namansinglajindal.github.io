@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexScan AI – Compliance Intelligence Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080c10;
+    --surface:   #0f1419;
+    --surface-2: #181f28;
+    --surface-3: #1f2937;
+    --border:    #2a3441;
+    --border-2:  #374151;
+    --text:      #d1dce8;
+    --text-muted:#6b7f96;
+    --text-dim:  #3d4f62;
+    --accent:    #00c896;
+    --accent-2:  #00a07a;
+    --accent-dim:#00c8961a;
+    --warn:      #f5c518;
+    --warn-dim:  #f5c5181a;
+    --danger:    #ef4444;
+    --danger-dim:#ef44441a;
+    --info:      #60a5fa;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --radius: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    font-weight: 700;
+  }
+  .logo span { color: var(--text-muted); font-size: 11px; letter-spacing: 1px; display: block; font-weight: 400; margin-top: -2px; }
+  .badge-free {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  select, textarea, input[type=text], input[type=password] {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 9px 12px;
+    transition: border-color .2s;
+    outline: none;
+    appearance: none;
+  }
+  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7f96' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  select:focus, textarea:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+  .key-wrapper { position: relative; }
+  .key-wrapper input { padding-right: 40px; }
+  .toggle-key {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 12px; font-family: var(--mono); padding: 2px 4px;
+  }
+  .toggle-key:hover { color: var(--accent); }
+
+  .api-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    background: var(--surface-3);
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    border-left: 2px solid var(--accent);
+  }
+  .api-hint a { color: var(--accent); text-decoration: none; }
+  .api-hint a:hover { text-decoration: underline; }
+
+  /* Toggle switch */
+  .toggle-row {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; user-select: none;
+  }
+  .toggle-row input[type=checkbox] { display: none; }
+  .toggle-track {
+    width: 36px; height: 20px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    position: relative;
+    transition: background .2s;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 12px; height: 12px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: transform .2s, background .2s;
+  }
+  .toggle-row input:checked + .toggle-track { background: var(--accent-dim); border-color: var(--accent); }
+  .toggle-row input:checked + .toggle-track::after { transform: translateX(16px); background: var(--accent); }
+  .toggle-label { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+  /* Generate button */
+  .btn-generate {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    color: #080c10;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background .2s, transform .1s, box-shadow .2s;
+    margin-top: 4px;
+  }
+  .btn-generate:hover { background: #00dba8; box-shadow: 0 0 20px #00c89640; }
+  .btn-generate:active { transform: scale(.98); }
+  .btn-generate:disabled { background: var(--surface-3); color: var(--text-dim); cursor: not-allowed; box-shadow: none; }
+
+  .divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+  /* ── MAIN PANEL ── */
+  .main {
+    padding: 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+    padding: 60px;
+    color: var(--text-dim);
+  }
+  .empty-icon {
+    font-size: 48px;
+    opacity: .4;
+    filter: grayscale(1);
+  }
+  .empty-state h2 {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+  }
+  .empty-state p { font-size: 13px; max-width: 380px; line-height: 1.7; }
+
+  /* ── LOADER ── */
+  .loader { display: none; flex-direction: column; gap: 10px; }
+  .loader.active { display: flex; }
+  .loader-line {
+    height: 2px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .loader-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -40%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan 1.4s ease-in-out infinite;
+  }
+  @keyframes scan { to { left: 140%; } }
+  .loader-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    animation: blink 1.2s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: .3; } }
+
+  /* ── RESULT PANEL ── */
+  .result-panel { display: none; flex-direction: column; gap: 20px; }
+  .result-panel.active { display: flex; }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .result-meta { display: flex; flex-direction: column; gap: 4px; }
+  .result-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .result-juris {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .result-timestamp {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .action-row { display: flex; gap: 8px; }
+  .btn-action {
+    padding: 7px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-action:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  /* Result content */
+  .result-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  /* Markdown-like rendering */
+  .result-content .md-h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-content .md-h2:first-child { margin-top: 0; }
+  .result-content .md-h2::before {
+    content: '//';
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  .result-content .md-h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--info);
+    margin: 14px 0 6px;
+  }
+  .result-content .md-p { margin-bottom: 8px; }
+  .result-content .md-li { margin-left: 20px; margin-bottom: 6px; list-style: none; position: relative; }
+  .result-content .md-li::before { content: '›'; position: absolute; left: -14px; color: var(--accent); }
+  .result-content .md-ol { counter-reset: ol-counter; }
+  .result-content .md-ol-li { margin-left: 24px; margin-bottom: 8px; list-style: none; position: relative; }
+  .result-content .md-ol-li::before { counter-increment: ol-counter; content: counter(ol-counter)'.'; position: absolute; left: -22px; color: var(--warn); font-family: var(--mono); font-size: 11px; font-weight: 700; }
+  .result-content strong { color: #e2e8f0; font-weight: 600; }
+  .result-content em { color: var(--text-muted); font-style: italic; }
+  .result-content code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface-3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--warn);
+  }
+
+  /* Risk badge */
+  .risk-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  }
+  .risk-high { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
+  .risk-medium { background: var(--warn-dim); color: var(--warn); border: 1px solid var(--warn); }
+  .risk-low { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); }
+  .risk-badge::before { content: '●'; font-size: 8px; }
+
+  /* Error state */
+  .error-box {
+    background: var(--danger-dim);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #fca5a5;
+    display: none;
+  }
+  .error-box.active { display: block; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* Footer */
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    .main { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">LEXSCAN<span>COMPLIANCE INTELLIGENCE ENGINE</span></div>
+  <span class="badge-free">FREE · GEMINI API</span>
+</div>
+
+<div class="layout">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+
+    <!-- API Key -->
+    <div class="field-group">
+      <label>Gemini API Key</label>
+      <div class="key-wrapper">
+        <input type="password" id="apiKey" placeholder="Paste your free API key…" autocomplete="off">
+        <button class="toggle-key" onclick="toggleKey()" title="Show/hide key">👁</button>
+      </div>
+      <div class="api-hint">
+        Free at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> → Get API Key. No credit card needed. 1,500 free requests/day.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Primary Jurisdiction -->
+    <div class="field-group">
+      <label>Primary Jurisdiction</label>
+      <select id="juris1">
+        <optgroup label="── Indian States ──">
+          <option value="All India (Central Government)">All India (Central)</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Delhi (NCT)">Delhi (NCT)</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Haryana">Haryana</option>
+        </optgroup>
+        <optgroup label="── International ──">
+          <option value="European Union (GDPR / EU law)">European Union</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Singapore">Singapore</option>
+          <option value="United Arab Emirates (DIFC / ADGM)">United Arab Emirates</option>
+          <option value="United States (Federal)">United States (Federal)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- Comparison Jurisdiction -->
+    <div class="field-group">
+      <label>Compare With (optional)</label>
+      <select id="juris2">
+        <option value="">— No Comparison —</option>
+        <optgroup label="── Indian States ──">
+          <option value="All India (Central Government)">All India (Central)</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Delhi (NCT)">Delhi (NCT)</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Haryana">Haryana</option>
+        </optgroup>
+        <optgroup label="── International ──">
+          <option value="European Union (GDPR / EU law)">European Union</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Singapore">Singapore</option>
+          <option value="United Arab Emirates (DIFC / ADGM)">United Arab Emirates</option>
+          <option value="United States (Federal)">United States (Federal)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- Domain -->
+    <div class="field-group">
+      <label>Legal Domain</label>
+      <select id="domain">
+        <option value="Environmental Law (Pollution Control, Waste Management, EIA)">🌿 Environmental Law</option>
+        <option value="Labour & Employment Law (Wages, Leave, POSH, ESI, PF)">👷 Labour & Employment</option>
+        <option value="Data Protection & Cybersecurity (DPDP Act, IT Act, GDPR equivalents)">🔐 Data Protection & Cybersecurity</option>
+        <option value="Corporate & Insolvency Law (Companies Act, IBC, SEBI)">🏢 Corporate & Insolvency</option>
+        <option value="Consumer Protection Law">🛒 Consumer Protection</option>
+        <option value="GST & Indirect Taxation Compliance">💰 GST & Taxation</option>
+        <option value="Foreign Exchange Management (FEMA, RBI Regulations)">💱 FEMA & Foreign Exchange</option>
+        <option value="Intellectual Property (Patents, Trademarks, Copyright)">💡 Intellectual Property</option>
+        <option value="Startup Regulatory Compliance (DPIIT, FDI, Entity Setup)">🚀 Startup Compliance</option>
+        <option value="Health & Safety (Factories Act, OSHA equivalents)">⚕️ Health & Safety</option>
+      </select>
+    </div>
+
+    <!-- Query -->
+    <div class="field-group">
+      <label>Specific Query or Sub-Topic</label>
+      <textarea id="query" placeholder="e.g. Hazardous waste storage requirements for a chemical plant · DPDP data localisation obligations for a SaaS startup · CTE renewal process in Gujarat…"></textarea>
+    </div>
+
+    <!-- Hidden Law Toggle -->
+    <label class="toggle-row">
+      <input type="checkbox" id="hiddenLaw">
+      <div class="toggle-track"></div>
+      <span class="toggle-label">Surface <strong>hidden / obscure</strong> obligations — circulars, local by-laws, tribunal orders often missed by startups</span>
+    </label>
+
+    <!-- Generate -->
+    <button class="btn-generate" id="genBtn" onclick="generate()">[ ANALYSE COMPLIANCE ]</button>
+
+    <div class="sidebar-footer">
+      LexScan AI · Powered by Google Gemini 1.5 Flash · Free tier<br>
+      Not legal advice. Always consult a qualified advocate.
+    </div>
+  </aside>
+
+  <!-- ─── MAIN PANEL ─── -->
+  <main class="main">
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⚖</div>
+      <h2>READY TO SCAN</h2>
+      <p>Select a jurisdiction and legal domain, describe your specific compliance question, and run the analysis. Results include citations to actual laws, risk level, and practical next steps.</p>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+      <div class="loader-line"></div>
+      <div class="loader-text" id="loaderText">SCANNING REGULATORY DATABASE…</div>
+      <div class="loader-line"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-box" id="errorBox"></div>
+
+    <!-- Results -->
+    <div class="result-panel" id="resultPanel">
+
+      <div class="result-header">
+        <div class="result-meta">
+          <div class="result-title">COMPLIANCE ANALYSIS</div>
+          <div class="result-juris" id="rJuris">—</div>
+          <div class="result-timestamp" id="rTime">—</div>
+        </div>
+        <div class="action-row">
+          <button class="btn-action" onclick="copyResult()">[ COPY ]</button>
+          <button class="btn-action" onclick="downloadResult()">[ DOWNLOAD .TXT ]</button>
+        </div>
+      </div>
+
+      <div class="result-content" id="resultContent"></div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  let lastRawText = '';
+
+  function toggleKey() {
+    const inp = document.getElementById('apiKey');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  const loaderMessages = [
+    'SCANNING REGULATORY DATABASE…',
+    'CROSS-REFERENCING STATE RULES…',
+    'EXTRACTING COMPLIANCE OBLIGATIONS…',
+    'FLAGGING HIGH-RISK AREAS…',
+    'COMPILING CITATIONS…',
+    'ALMOST READY…'
+  ];
+  let loaderInterval;
+
+  function setLoading(on) {
+    document.getElementById('loader').classList.toggle('active', on);
+    document.getElementById('emptyState').style.display = on ? 'none' : '';
+    document.getElementById('genBtn').disabled = on;
+    if (on) {
+      let i = 0;
+      loaderInterval = setInterval(() => {
+        document.getElementById('loaderText').textContent = loaderMessages[i % loaderMessages.length];
+        i++;
+      }, 900);
+    } else {
+      clearInterval(loaderInterval);
+    }
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = '⚠ ' + msg;
+    box.classList.add('active');
+    setTimeout(() => box.classList.remove('active'), 7000);
+  }
+
+  async function generate() {
+    const key = document.getElementById('apiKey').value.trim();
+    const j1  = document.getElementById('juris1').value;
+    const j2  = document.getElementById('juris2').value;
+    const dom = document.getElementById('domain').value;
+    const q   = document.getElementById('query').value.trim();
+    const hidden = document.getElementById('hiddenLaw').checked;
+
+    if (!key) { showError('Please enter your Gemini API key. It is free at aistudio.google.com.'); return; }
+
+    const jurisLabel = j2 ? `${j1}  vs  ${j2}` : j1;
+    const comparisonNote = j2
+      ? `The user wants a SIDE-BY-SIDE COMPARISON between ${j1} and ${j2}. Organise your response in two clearly labelled sections, one per jurisdiction, before any shared observations.`
+      : '';
+    const hiddenNote = hidden
+      ? `IMPORTANT: Also surface non-obvious, "hidden" obligations — state-specific government circulars, local body by-laws, tribunal orders, and notification-based rules that most startups miss. Clearly label these as [HIDDEN OBLIGATION].`
+      : '';
+
+    const prompt = `You are a senior regulatory compliance expert specialising in Indian law and comparative international regulation.
+
+A user is requesting a compliance analysis with these parameters:
+- Primary Jurisdiction: ${j1}
+${j2 ? `- Comparison Jurisdiction: ${j2}` : ''}
+- Legal Domain: ${dom}
+- Specific Query: ${q || '(General compliance overview for this domain and jurisdiction)'}
+
+${comparisonNote}
+${hiddenNote}
+
+Structure your response EXACTLY as follows, using these section headers on their own line:
+
+## TOP COMPLIANCE OBLIGATIONS
+List the 4–6 most critical compliance obligations. Be specific — name exact acts, sections, and rules. If comparing jurisdictions, organise by jurisdiction.
+
+## LEGAL CITATIONS
+For each obligation, cite: (i) the full name of the Act/Rule/Notification, (ii) the relevant Section/Rule number, (iii) the issuing authority or ministry. Format each as: [Citation N] — Act Name, Section X — Ministry/Authority.
+
+## RISK LEVEL
+State the overall risk level (HIGH / MEDIUM / LOW) for a typical startup or business operating in this domain and jurisdiction. Justify in 2–3 sentences.
+
+## PRACTICAL COMPLIANCE STEPS
+Provide 3–4 concrete, actionable steps a business should take to achieve compliance. Number them.
+
+## WATCH OUT FOR
+List 2–3 traps, recent amendments, or commonly overlooked requirements. Use bullet points.
+
+## IMPORTANT CAVEATS
+Note any areas where law is evolving, unclear, or where you have lower confidence. Say explicitly "Verify: [topic]" for anything that requires independent confirmation.
+
+Rules:
+- Only cite laws, rules, and notifications that you are confident exist.
+- Never make up case names, section numbers, or notification dates.
+- If you are uncertain, write "Verify independently: [topic]" rather than guessing.
+- Be concise but thorough.`;
+
+    setLoading(true);
+    document.getElementById('resultPanel').classList.remove('active');
+    document.getElementById('errorBox').classList.remove('active');
+
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.15, maxOutputTokens: 2048 }
+          })
+        }
+      );
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.error?.message || `HTTP ${resp.status}`);
+      }
+
+      const data = await resp.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error('Empty response from Gemini. Please try again.');
+
+      lastRawText = text;
+
+      // Render
+      document.getElementById('rJuris').textContent = jurisLabel + ' · ' + dom.split('(')[0].trim();
+      document.getElementById('rTime').textContent = 'Generated: ' + new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+      document.getElementById('resultContent').innerHTML = renderMarkdown(text);
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultPanel').classList.add('active');
+
+    } catch (e) {
+      showError(e.message);
+      document.getElementById('emptyState').style.display = '';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderMarkdown(text) {
+    const lines = text.split('\n');
+    let html = '';
+    let inOL = false, inUL = false;
+
+    const closeList = () => {
+      if (inOL) { html += '</ol>'; inOL = false; }
+      if (inUL) { html += '</ul>'; inUL = false; }
+    };
+
+    for (let raw of lines) {
+      const line = raw.trim();
+      if (!line) { closeList(); html += '<br>'; continue; }
+
+      if (line.startsWith('## ')) {
+        closeList();
+        html += `<div class="md-h2">${esc(line.slice(3))}</div>`;
+      } else if (line.startsWith('### ')) {
+        closeList();
+        html += `<div class="md-h3">${esc(line.slice(4))}</div>`;
+      } else if (/^\d+\.\s/.test(line)) {
+        if (!inOL) { html += '<ol class="md-ol">'; inOL = true; }
+        if (inUL) { html += '</ul>'; inUL = false; }
+        html += `<li class="md-ol-li">${inline(line.replace(/^\d+\.\s/, ''))}</li>`;
+      } else if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
+        if (!inUL) { html += '<ul>'; inUL = true; }
+        if (inOL) { html += '</ol>'; inOL = false; }
+        html += `<li class="md-li">${inline(line.slice(2))}</li>`;
+      } else {
+        closeList();
+        html += `<p class="md-p">${inline(line)}</p>`;
+      }
+    }
+    closeList();
+    return html;
+  }
+
+  function inline(text) {
+    return esc(text)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\[HIDDEN OBLIGATION\]/g, '<span style="background:#00c8961a;color:#00c896;padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:1px;">HIDDEN OBLIGATION</span>')
+      .replace(/\bHIGH\b/g, '<span class="risk-badge risk-high">HIGH</span>')
+      .replace(/\bMEDIUM\b/g, '<span class="risk-badge risk-medium">MEDIUM</span>')
+      .replace(/\bLOW\b/g, '<span class="risk-badge risk-low">LOW</span>');
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function copyResult() {
+    navigator.clipboard.writeText(lastRawText).then(() => {
+      const btn = event.target;
+      btn.textContent = '[ COPIED ✓ ]';
+      setTimeout(() => btn.textContent = '[ COPY ]', 2000);
+    });
+  }
+
+  function downloadResult() {
+    const j1 = document.getElementById('juris1').value;
+    const dom = document.getElementById('domain').value.split('(')[0].trim().replace(/\s+/g, '_');
+    const blob = new Blob([lastRawText], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `LexScan_${j1.replace(/\s/g,'_')}_${dom}_${Date.now()}.txt`;
+    a.click();
+  }
+</script>
+</body>
+</html>
