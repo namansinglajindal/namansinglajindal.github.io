@@ -1,6 +1,6 @@
 # LexScan AI + ClauseForge
 ### Cross-Jurisdictional Compliance Intelligence & Legal Clause Architect
-*Built by [Your Name] · BSc LLB (Hons) Cybersecurity · NLIU*
+*Built by Naman Singla · BSc LLB (Hons) Cybersecurity · NLIU*
 
 ---
 
@@ -31,7 +31,7 @@ That's it. Works 100% offline after loading fonts (first time needs internet for
 
 Get a public shareable link like `https://yourusername.github.io/lexscan/`
 
-### Step-by-step (15 minutes, free):
+### Step-by-step for anyone to deploy these tools (15 minutes, free):
 
 **Step 1: Create a GitHub account**
 - Go to [github.com](https://github.com) → Sign Up (free)
@@ -147,7 +147,7 @@ Two sheets are automatically created with headers and sample data.
 
 ---
 
-## What These Tools Do (For Your Application Essays)
+## What These Tools Do 
 
 ### LexScan AI — Compliance Intelligence Engine
 - **Problem solved:** Startups and law firms waste weeks researching state-specific compliance requirements. Environmental clearances, labour law variations, DPDP obligations — these are scattered across notifications, circulars, and local by-laws that even lawyers miss.
@@ -163,12 +163,12 @@ Two sheets are automatically created with headers and sample data.
 
 ---
 
-## Suggested Application Links (Question 12)
+
 
 Use these three links:
-1. **GitHub Pages URL** — your live portfolio of both tools (e.g., `https://yourusername.github.io/lexscan-ai/`)
-2. **Google Sheets link** — the compliance checker in Sheets with sample outputs already filled in (share as view-only)
-3. **GitHub repository** — `https://github.com/yourusername/lexscan-ai` — shows all source files
+1. **GitHub Pages URL** — live portfolio of both tools
+2. **Google Sheets link** — the compliance checker in Sheets with sample outputs already filled in (shared as view-only)
+3. **GitHub repository** — shows all source files
 
 ---
 
@@ -180,4 +180,4 @@ Always review generated content with a qualified advocate before relying on it.
 
 ---
 
-*LexScan AI & ClauseForge · Built with Google Gemini API (Free Tier) · India-focused legal tech*
+*LexScan AI & ClauseForge · Built with Google Gemini API (Free Tier) · India-focused legal tech* Note: This whole tool and output has been developed using AI Tools.
